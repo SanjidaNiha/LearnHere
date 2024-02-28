@@ -22,32 +22,23 @@ if(isset($_POST['submit'])){
    $rename = uniqid().'.'.$ext;
    $image_size = $_FILES['image']['size'];
    $image_tmp_name = $_FILES['image']['tmp_name'];
-   $image_folder = 'C:/xampp/htdocs/learnhere/uploaded_files/' . $rename;
+   $image_folder = '../uploaded_files/'.$rename;
 
-      // ... (your existing code)
-  
-      $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ?");
-      $select_user->execute([$email]);
-  
-      if ($select_user->rowCount() > 0) {
-          $message[] = 'email already taken!';
-      } else {
-          if ($pass != $cpass) {
-              $message[] = 'confirm password not matched!';
-          } else {
-              $insert_user = $conn->prepare("INSERT INTO `users`(id, name,email, password, image) VALUES(?,?,?,?,?)");
-              $insert_user->execute([$id, $name, $email, $cpass, $rename]);
-              
-              // Move the file only after successful database insertion
-              if (move_uploaded_file($image_tmp_name, $image_folder)) {
-                  $message[] = 'New user registered! Please Login now';
-              } else {
-                  $message[] = 'File move operation failed';
-              }
-          }
+   $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE email = ?");
+   $select_tutor->execute([$email]);
+   
+   if($select_tutor->rowCount() > 0){
+      $message[] = 'email already taken!';
+   }else{
+      if($pass != $cpass){
+         $message[] = 'confirm password not matched!';
+      }else{
+         $insert_tutor = $conn->prepare("INSERT INTO `tutors`(id, name,email, password, image) VALUES(?,?,?,?,?)");
+         $insert_tutor->execute([$id, $name, $email, $cpass, $rename]);
+         move_uploaded_file($image_tmp_name, $image_folder);
+         $message[] = 'New tutor registered! Please Login now';
       }
-  
-  
+   }
 
 }
 
@@ -66,7 +57,7 @@ if(isset($_POST['submit'])){
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
    <!-- custom css file link  -->
-   <link rel="stylesheet" href="css/style.css">
+   <link rel="stylesheet" href="../css/admin_style.css">
 
 </head>
 <body style="padding-left: 0;">
