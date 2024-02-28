@@ -19,13 +19,13 @@ if(isset($_POST['submit'])){
 //FILTER_SANITIZE_STRING' is deprecated.
    $pass = sha1($_POST['pass']);
    $pass = filter_var($pass, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-   $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ? AND password = ? LIMIT 1");
-   $select_user->execute([$email, $pass]);
-   $row = $select_user->fetch(PDO::FETCH_ASSOC);
+   $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE email = ? AND password = ? LIMIT 1");
+   $select_tutor->execute([$email, $pass]);
+   $row = $select_tutor->fetch(PDO::FETCH_ASSOC);
    
-   if($select_user->rowCount() > 0){
-     setcookie('user_id', $row['id'], time() + 60*60*24*30, '/');
-     header('location:home.php');
+   if($select_tutor->rowCount() > 0){
+     setcookie('tutor_id', $row['id'], time() + 60*60*24*30, '/');
+     header('location:dashboard.php');
    }else{
       $message[] = 'incorrect email or password!';
    }
@@ -46,7 +46,7 @@ if(isset($_POST['submit'])){
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
    <!-- custom css file link  -->
-   <link rel="stylesheet" href="css/style.css">
+   <link rel="stylesheet" href="../css/admin_style.css">
 
 </head>
 <body style="padding-left: 0;">
@@ -68,12 +68,12 @@ if(isset($message)){
 <section class="form-container">
 
    <form action="" method="post" enctype="multipart/form-data" class="login">
-      <h3>Welcome back!</h3>
-      <p>Your email <span>*</span></p>
+      <h3>welcome back!</h3>
+      <p>your email <span>*</span></p>
       <input type="email" name="email" placeholder="enter your email" maxlength="20" required class="box">
-      <p>Your password <span>*</span></p>
+      <p>your password <span>*</span></p>
       <input type="password" name="pass" placeholder="enter your password" maxlength="20" required class="box">
-      <p class="link">Don't have an account? <a href="register.php">Register new</a></p>
+      <p class="link">don't have an account? <a href="register.php">register new</a></p>
       <input type="submit" name="submit" value="login now" class="btn">
    </form>
 
